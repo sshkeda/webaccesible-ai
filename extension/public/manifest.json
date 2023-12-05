@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "waccessible.ai Extension",
+  "version": "0.0.1",
+  "description": "Web acceessibility conformance extension powered by GPT-3",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "storage"
+  ]
+}
