@@ -22,13 +22,13 @@ export default function App() {
     console.log(value);
   }
 
-  function addMessage(message: Message) {
-    setMessages((messages) => [...messages, message]);
-  }
-
   useEffect(() => {
     setIsLoading(aiLoading);
   }, [aiLoading]);
+
+  function addMessage(message: Message) {
+    setMessages((messages) => [...messages, message]);
+  }
 
   async function generateReport() {
     setIsLoading(true);
