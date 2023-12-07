@@ -9,12 +9,12 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["assets/content-script/index.js"]
+      "js": ["assets/content-script.js"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/content-script/*.js"],
+      "resources": ["assets/*.js"],
 
       "matches": ["*://*/*"]
     }

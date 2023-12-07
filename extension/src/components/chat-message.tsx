@@ -29,7 +29,7 @@ export default function ChatMessage({ message }: { message: Message }) {
           <Bot />
         )}
       </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-hidden px-1">
+      <div className="ml-4 flex-1 space-y-2 overflow-x-auto overflow-y-hidden px-1 scrollbar-thin dark:scrollbar-thumb-slate-800 scrollbar-thumb-slate-200">
         <MemoizedReactMarkdown
           className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 break-words"
           remarkPlugins={[remarkGfm, remarkMath]}

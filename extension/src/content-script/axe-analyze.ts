@@ -14,6 +14,6 @@ async function handleRequest(request: unknown) {
 
   if (action === "generateReport") {
     const results = await axe.run();
-    return results.violations.length
+    return results;
   }
 }

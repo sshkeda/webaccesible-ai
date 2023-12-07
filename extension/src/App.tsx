@@ -5,6 +5,8 @@ import { Separator } from "./components/ui/separator";
 import ChatMessage from "./components/chat-message";
 import InitialMessageSuggestions from "./components/initial-message-suggestions";
 import { useEffect, useState } from "react";
+import type axe from "axe-core";
+import { array, object, parse, string } from "valibot";
 
 export default function App() {
   const {
@@ -14,13 +16,14 @@ export default function App() {
     messages,
     append,
     setMessages,
-  } = useChat();
+    handleSubmit,
+    handleInputChange,
+    stop,
+  } = useChat({
+    api: "http://localhost:3000/api",
+  });
 
   const [isLoading, setIsLoading] = useState(false);
-
-  function onSubmit(value: string) {
-    console.log(value);
-  }
 
   useEffect(() => {
     setIsLoading(aiLoading);
@@ -35,8 +38,8 @@ export default function App() {
     try {
       addMessage({
         id: `report_${messages.length}`,
-        role: "system",
-        content: "Generating report...",
+        role: "user",
+        content: "Generate an accessibility report.",
       });
 
       const [tab] = await chrome.tabs.query({
@@ -52,11 +55,14 @@ export default function App() {
         });
         return;
       }
-      const response = await chrome.tabs.sendMessage(tab.id, {
+
+      const results: axe.AxeResults = await chrome.tabs.sendMessage(tab.id, {
         action: "generateReport",
       });
 
-      if (!response) {
+      console.log(results);
+
+      if (!results) {
         addMessage({
           id: `error_${messages.length}`,
           role: "system",
@@ -64,11 +70,24 @@ export default function App() {
         });
         return;
       }
+      console.log(results);
+
+      const schema = array(
+        object({
+          description: string(),
+          help: string(),
+          helpUrl: string(),
+          id: string(),
+          impact: string(),
+        }),
+      );
+
+      const violations = parse(schema, results.violations);
 
       addMessage({
         id: `report_${messages.length}`,
-        role: "system",
-        content: JSON.stringify(response, null, 2),
+        role: "assistant",
+        content: "```json\n" + JSON.stringify(violations, null, 2) + "\n```",
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -82,6 +101,13 @@ export default function App() {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   return (
     <main>
@@ -111,7 +137,10 @@ export default function App() {
             input={input}
             setInput={setInput}
             isLoading={isLoading}
-            onSubmit={onSubmit}
+            handleSubmit={handleSubmit}
+            setMessages={setMessages}
+            handleInputChange={handleInputChange}
+            stop={stop}
           />
         </div>
       </div>

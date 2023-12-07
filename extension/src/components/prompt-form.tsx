@@ -1,6 +1,6 @@
 import * as React from "react";
 import Textarea from "react-textarea-autosize";
-import { UseChatHelpers } from "ai/react";
+import { type UseChatHelpers } from "ai/react";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -13,15 +13,21 @@ import { CornerDownLeft, Plus } from "lucide-react";
 
 export interface PromptProps
   extends Pick<UseChatHelpers, "input" | "setInput"> {
-  onSubmit: (value: string) => void;
+  handleSubmit: UseChatHelpers["handleSubmit"];
+  setMessages: UseChatHelpers["setMessages"];
+  handleInputChange: UseChatHelpers["handleInputChange"];
+  stop: UseChatHelpers["stop"];
   isLoading: boolean;
 }
 
 export default function PromptForm({
-  onSubmit,
+  handleSubmit,
   input,
   setInput,
   isLoading,
+  setMessages,
+  handleInputChange,
+  stop,
 }: PromptProps) {
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
@@ -32,28 +38,20 @@ export default function PromptForm({
   }, []);
 
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (!input?.trim()) {
-          return;
-        }
-        setInput("");
-        await onSubmit(input);
-      }}
-      ref={formRef}
-    >
-      <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
+    <form onSubmit={handleSubmit} ref={formRef}>
+      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               onClick={(e) => {
                 e.preventDefault();
-                // RESET
+                stop();
+                setMessages([]);
+                setInput("");
               }}
               className={cn(
                 buttonVariants({ size: "sm", variant: "outline" }),
-                "absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4"
+                "absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4",
               )}
             >
               <Plus />
@@ -68,10 +66,10 @@ export default function PromptForm({
           onKeyDown={onKeyDown}
           rows={1}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInputChange}
           placeholder="Send a message."
           spellCheck={false}
-          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none scrollbar-thin  dark:scrollbar-thumb-slate-800 scrollbar-thumb-slate-200  text-base "
+          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] text-base scrollbar-thin  scrollbar-thumb-slate-200 focus-within:outline-none  dark:scrollbar-thumb-slate-800 "
         />
         <div className="absolute right-0 top-4 sm:right-4">
           <Tooltip>
@@ -79,7 +77,7 @@ export default function PromptForm({
               <Button
                 type="submit"
                 size="icon"
-                className="w-8 h-8"
+                className="h-8 w-8"
                 disabled={isLoading || input === ""}
               >
                 <CornerDownLeft className="h-4 w-4" />
