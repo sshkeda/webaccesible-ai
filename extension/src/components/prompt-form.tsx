@@ -17,7 +17,7 @@ export interface PromptProps
   isLoading: boolean;
 }
 
-export function PromptForm({
+export default function PromptForm({
   onSubmit,
   input,
   setInput,
@@ -71,7 +71,7 @@ export function PromptForm({
           onChange={(e) => setInput(e.target.value)}
           placeholder="Send a message."
           spellCheck={false}
-          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
+          className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none scrollbar-thin  dark:scrollbar-thumb-slate-800 scrollbar-thumb-slate-200  text-base "
         />
         <div className="absolute right-0 top-4 sm:right-4">
           <Tooltip>
@@ -79,6 +79,7 @@ export function PromptForm({
               <Button
                 type="submit"
                 size="icon"
+                className="w-8 h-8"
                 disabled={isLoading || input === ""}
               >
                 <CornerDownLeft className="h-4 w-4" />

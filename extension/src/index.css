@@ -79,3 +79,7 @@ body {
   width: 400px;
   height: 600px;
 }
+
+body {
+  @apply scrollbar-thin dark:scrollbar-thumb-slate-800 scrollbar-thumb-slate-200
+}
