@@ -65,7 +65,7 @@ export default function App() {
             content: `An axe-core accessibility test was ran on **${
               tab.url
             }** and found ${results.violations.length} violation${
-              results.violations.length != 0 && "s"
+              results.violations.length != 0 ? "s" : ""
             }.`,
           },
           ...results.violations.map((violation) => {
