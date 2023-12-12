@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CornerDownLeft, Plus } from "lucide-react";
 
-export interface PromptProps
+export interface ChatPromptProps
   extends Pick<UseChatHelpers, "input" | "setInput"> {
   handleSubmit: UseChatHelpers["handleSubmit"];
   setMessages: UseChatHelpers["setMessages"];
@@ -20,7 +20,7 @@ export interface PromptProps
   isLoading: boolean;
 }
 
-export default function PromptForm({
+export default function ChatPrompt({
   handleSubmit,
   input,
   setInput,
@@ -28,7 +28,7 @@ export default function PromptForm({
   setMessages,
   handleInputChange,
   stop,
-}: PromptProps) {
+}: ChatPromptProps) {
   const { formRef, onKeyDown } = useEnterSubmit();
   const inputRef = React.useRef<HTMLTextAreaElement>(null);
   React.useEffect(() => {

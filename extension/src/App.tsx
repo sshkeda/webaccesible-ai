@@ -1,12 +1,19 @@
 import ThemeToggle from "./components/theme-toggle";
-import PromptForm from "./components/prompt-form";
-import { useChat, type Message } from "@sshkeda/ai/react";
-import { Separator } from "./components/ui/separator";
-import ChatMessage from "./components/chat-message";
-import InitialMessageSuggestions from "./components/initial-message-suggestions";
-import { useEffect, useState } from "react";
+import ChatPrompt from "./components/chat-prompt";
+import { useChat } from "@sshkeda/ai/react";
+import { useEffect } from "react";
 import type axe from "axe-core";
-import { array, object, parse, string } from "valibot";
+import { useSetAtom } from "jotai";
+import ChatList from "./components/chat-list";
+import { errorAtom } from "./lib/atoms";
+import { Message } from "ai";
+
+const TAGS = ["wcag21aa", "best-practice"];
+
+export interface Report {
+  axeResults: axe.AxeResults;
+  tab: chrome.tabs.Tab;
+}
 
 export default function App() {
   const {
@@ -14,7 +21,6 @@ export default function App() {
     setInput,
     isLoading: aiLoading,
     messages,
-    append,
     setMessages,
     handleSubmit,
     handleInputChange,
@@ -23,84 +29,69 @@ export default function App() {
     api: "http://localhost:3000/api",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const setError = useSetAtom(errorAtom);
 
   useEffect(() => {
-    setIsLoading(aiLoading);
-  }, [aiLoading]);
-
-  function addMessage(message: Message) {
-    setMessages((messages) => [...messages, message]);
-  }
-
-  async function generateReport() {
-    setIsLoading(true);
-    try {
-      addMessage({
-        id: `report_${messages.length}`,
-        role: "user",
-        content: "Generate an accessibility report.",
-      });
-
-      const [tab] = await chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true,
-      });
-
-      if (!tab || !tab.id) {
-        addMessage({
-          id: `error_${messages.length}`,
-          role: "system",
-          content: "No tab found. Try reloading the page.",
+    async function generateReport() {
+      try {
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
         });
-        return;
-      }
 
-      const results: axe.AxeResults = await chrome.tabs.sendMessage(tab.id, {
-        action: "generateReport",
-      });
-
-      console.log(results);
-
-      if (!results) {
-        addMessage({
-          id: `error_${messages.length}`,
-          role: "system",
-          content: "No response from content script. Try reloading the page.",
+        const results: axe.AxeResults = await chrome.tabs.sendMessage(tab.id!, {
+          action: "generateReport",
+          data: {
+            options: {
+              runOnly: {
+                type: "tag",
+                values: TAGS,
+              },
+            },
+          },
         });
-        return;
+
+        if (!results) {
+          throw new Error("No response from content script.");
+        }
+
+        console.log(results);
+
+        setMessages((messages) => [
+          ...messages,
+          {
+            id: `report_summary_${results.timestamp}`,
+            role: "assistant",
+            content: `An axe-core accessibility test was ran on **${
+              tab.url
+            }** and found ${results.violations.length} violation${
+              results.violations.length != 0 && "s"
+            }.`,
+          },
+          ...results.violations.map((violation) => {
+            const { description, helpUrl, id, impact } = violation;
+
+            return {
+              id: `report_violation_${violation.id}`,
+              role: "assistant",
+              content: JSON.stringify({
+                description,
+                helpUrl,
+                id,
+                impact,
+              }),
+            } satisfies Message;
+          }),
+        ]);
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error);
+        }
       }
-      console.log(results);
-
-      const schema = array(
-        object({
-          description: string(),
-          help: string(),
-          helpUrl: string(),
-          id: string(),
-          impact: string(),
-        }),
-      );
-
-      const violations = parse(schema, results.violations);
-
-      addMessage({
-        id: `report_${messages.length}`,
-        role: "assistant",
-        content: "```json\n" + JSON.stringify(violations, null, 2) + "\n```",
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        addMessage({
-          id: `error_${messages.length}`,
-          role: "system",
-          content: error.message,
-        });
-      }
-    } finally {
-      setIsLoading(false);
     }
-  }
+
+    generateReport();
+  }, [setError, setMessages]);
 
   useEffect(() => {
     window.scrollTo({
@@ -116,27 +107,14 @@ export default function App() {
         <ThemeToggle />
       </div>
       <div className="mt-4 px-4 pb-[66px]">
-        {messages.length === 0 && (
-          <InitialMessageSuggestions
-            append={append}
-            generateReport={generateReport}
-          />
-        )}
-        {messages.map((message, index) => (
-          <div key={index}>
-            <ChatMessage message={message} />
-            {index < messages.length - 1 && (
-              <Separator className="my-4 md:my-8" />
-            )}
-          </div>
-        ))}
+        <ChatList messages={messages} />
       </div>
       <div className="fixed inset-x-0 bottom-0 w-full">
         <div className="mt-4 border-t px-4">
-          <PromptForm
+          <ChatPrompt
             input={input}
             setInput={setInput}
-            isLoading={isLoading}
+            isLoading={aiLoading}
             handleSubmit={handleSubmit}
             setMessages={setMessages}
             handleInputChange={handleInputChange}

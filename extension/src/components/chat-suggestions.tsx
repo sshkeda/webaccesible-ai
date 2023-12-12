@@ -2,15 +2,15 @@ import { Button } from "@/components/ui/button";
 import { ActivitySquare } from "lucide-react";
 import type { UseChatHelpers } from "ai/react";
 
-interface InitialMessageSuggestionsProps {
+interface ChatSuggestionsProps {
   append: UseChatHelpers["append"];
   generateReport: () => void;
 }
 
-export default function InitialMessageSuggestions({
+export default function ChatSuggestions({
   append,
   generateReport,
-}: InitialMessageSuggestionsProps) {
+}: ChatSuggestionsProps) {
   return (
     <div className="flex flex-wrap gap-2">
       <Button

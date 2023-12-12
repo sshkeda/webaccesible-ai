@@ -9,8 +9,12 @@ import { Bot, User, AlertCircle } from "lucide-react";
 
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
+import ViolationMessage from "./violation-message";
 
 export default function ChatMessage({ message }: { message: Message }) {
+  if (message.id.startsWith("report_violation")) {
+    return <ViolationMessage violation={JSON.parse(message.content)} />;
+  }
   return (
     <div className="relative mb-4 flex items-start">
       <div
@@ -29,7 +33,7 @@ export default function ChatMessage({ message }: { message: Message }) {
           <Bot />
         )}
       </div>
-      <div className="ml-4 flex-1 space-y-2 overflow-x-auto overflow-y-hidden px-1 scrollbar-thin dark:scrollbar-thumb-slate-800 scrollbar-thumb-slate-200">
+      <div className="ml-4 flex-1 space-y-2 overflow-x-auto overflow-y-hidden px-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-800">
         <MemoizedReactMarkdown
           className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 break-words"
           remarkPlugins={[remarkGfm, remarkMath]}

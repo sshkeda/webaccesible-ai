@@ -1,5 +1,5 @@
 import axe from "axe-core";
-import { object, parse, string } from "valibot";
+import { object, parse, string, any } from "valibot";
 
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   handleRequest(request).then(sendResponse);
@@ -8,12 +8,15 @@ chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
 
 const schema = object({
   action: string(),
+  data: any(),
 });
 async function handleRequest(request: unknown) {
-  const { action } = parse(schema, request);
+  const { action, data } = parse(schema, request);
+
+  const { options } = data;
 
   if (action === "generateReport") {
-    const results = await axe.run();
+    const results = await axe.run(options);
     return results;
   }
 }
