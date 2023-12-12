@@ -6,7 +6,7 @@ import type axe from "axe-core";
 import { useSetAtom } from "jotai";
 import ChatList from "./components/chat-list";
 import { errorAtom } from "./lib/atoms";
-import { Message } from "ai";
+import { Message } from "@sshkeda/ai";
 
 const TAGS = ["wcag21aa", "best-practice"];
 

@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.11.2"
+  },
+  "name": "nextrepl"
+}

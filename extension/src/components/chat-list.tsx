@@ -1,4 +1,4 @@
-import { Message } from "ai/react";
+import { Message } from "@sshkeda/ai/react";
 import ChatMessage from "./chat-message";
 import { Separator } from "@radix-ui/react-separator";
 

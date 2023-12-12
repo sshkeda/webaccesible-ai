@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ActivitySquare } from "lucide-react";
-import type { UseChatHelpers } from "ai/react";
+import type { UseChatHelpers } from "@sshkeda/ai/react";
 
 interface ChatSuggestionsProps {
   append: UseChatHelpers["append"];

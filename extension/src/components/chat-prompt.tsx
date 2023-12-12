@@ -1,6 +1,6 @@
 import * as React from "react";
 import Textarea from "react-textarea-autosize";
-import { type UseChatHelpers } from "ai/react";
+import { type UseChatHelpers } from "@sshkeda/ai/react";
 import { useEnterSubmit } from "@/lib/hooks/use-enter-submit";
 import { cn } from "@/lib/utils";
 import { Button, buttonVariants } from "@/components/ui/button";

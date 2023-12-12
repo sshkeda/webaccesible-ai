@@ -2,7 +2,7 @@
 // @see https://github.com/vercel/ai-chatbot/blob/main/components/chat-message.tsx
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
 
-import type { Message } from "ai";
+import type { Message } from "@sshkeda/ai";
 import { MemoizedReactMarkdown } from "./markdown";
 import { cn } from "@/lib/utils";
 import { Bot, User, AlertCircle } from "lucide-react";
