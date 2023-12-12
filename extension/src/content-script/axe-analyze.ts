@@ -10,6 +10,7 @@ const schema = object({
   action: string(),
   data: any(),
 });
+
 async function handleRequest(request: unknown) {
   const { action, data } = parse(schema, request);
 
