@@ -1,7 +1,7 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -18,10 +18,10 @@ export default {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ["var(--font-sans)", ...fontFamily.sans],
+    },
     extend: {
-      fontFamily: {
-        sans: ["'Inclusive Sans'", ...fontFamily.sans],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -31,6 +31,17 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          "primary-50": "hsl(var(--primary-50))",
+          "primary-100": "hsl(var(--primary-100))",
+          "primary-200": "hsl(var(--primary-200))",
+          "primary-300": "hsl(var(--primary-300))",
+          "primary-400": "hsl(var(--primary-400))",
+          "primary-500": "hsl(var(--primary-500))",
+          "primary-600": "hsl(var(--primary-600))",
+          "primary-700": "hsl(var(--primary-700))",
+          "primary-800": "hsl(var(--primary-800))",
+          "primary-900": "hsl(var(--primary-900))",
+          "primary-950": "hsl(var(--primary-950))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -78,9 +89,5 @@ export default {
       },
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    require("@tailwindcss/typography"),
-    require("tailwind-scrollbar")({ nocompatible: true }),
-  ],
+  plugins: [require("tailwindcss-animate")],
 };

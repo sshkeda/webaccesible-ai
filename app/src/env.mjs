@@ -5,4 +5,7 @@ export const env = createEnv({
   server: {
     OPENAI_API_KEY: z.string().min(1),
   },
+  runtimeEnv: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  },
 });

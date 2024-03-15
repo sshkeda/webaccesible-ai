@@ -18,7 +18,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: "index.html",
-        content: "src/main.tsx",
+        content: "src/layout.tsx",
         "content-script": "src/content-script/index.ts",
       },
 
@@ -36,6 +36,10 @@ export default defineConfig({
           // }
 
           return "assets/[name].js";
+        },
+        assetFileNames: (assetInfo) => {
+          const { name } = path.parse(assetInfo.name);
+          return `assets/[ext]/${name}.[ext]`;
         },
       },
     },

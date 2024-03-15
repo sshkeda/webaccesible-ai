@@ -68,9 +68,9 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply min-w-0 border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply !mr-0 h-[600px] w-[400px] bg-background !font-sans text-foreground antialiased;
   }
 }

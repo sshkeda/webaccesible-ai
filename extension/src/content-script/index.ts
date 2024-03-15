@@ -1,1 +1,1 @@
-import("@/content-script/axe-analyze");
+import("@/content-script/handler");

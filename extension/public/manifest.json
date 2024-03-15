@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "waccessible.ai Extension",
+  "name": "webaccessible.ai Extension",
   "version": "0.0.1",
   "description": "Web acceessibility conformance extension powered by GPT-3",
   "action": {
@@ -9,15 +9,16 @@
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*", "<all_urls>"],
-      "js": ["assets/content-script.js"]
+      "js": ["assets/content-script.js"],
+      "runAt": "document_end"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["assets/*.js"],
+      "resources": ["assets/*.js", "assets/*.ttf"],
 
       "matches": ["*://*/*"]
     }
   ],
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "storage"]
 }

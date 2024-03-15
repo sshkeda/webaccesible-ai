@@ -16,7 +16,9 @@ export default function Error() {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Extension Errors Present</AlertDialogTitle>
-          <AlertDialogDescription>{error?.message}</AlertDialogDescription>
+          {error && (
+            <AlertDialogDescription>{error.message}</AlertDialogDescription>
+          )}
         </AlertDialogHeader>
       </AlertDialogContent>
     </AlertDialog>

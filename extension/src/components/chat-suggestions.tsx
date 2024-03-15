@@ -1,43 +1,66 @@
-import { Button } from "@/components/ui/button";
-import { ActivitySquare } from "lucide-react";
-import type { UseChatHelpers } from "@sshkeda/ai/react";
-
-interface ChatSuggestionsProps {
-  append: UseChatHelpers["append"];
-  generateReport: () => void;
-}
+import { Button } from "./ui/button";
+import { nanoid } from "ai";
+import type { UseChatHelpers } from "ai/react";
 
 export default function ChatSuggestions({
   append,
-  generateReport,
-}: ChatSuggestionsProps) {
+}: {
+  append: UseChatHelpers["append"];
+}) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="absolute -top-[88px] flex w-full flex-wrap justify-center gap-2">
       <Button
+        size="sm"
         variant="outline"
-        onClick={() =>
+        onClick={() => {
           append({
+            id: nanoid(),
             role: "user",
-            content: "What is waccessible.ai?",
-          })
-        }
+            content: "What can you do?",
+          });
+        }}
       >
-        What is waccessible.ai?
+        What can you do?
       </Button>
       <Button
+        size="sm"
         variant="outline"
-        onClick={() =>
+        onClick={() => {
           append({
+            id: nanoid(),
             role: "user",
-            content: "What is WCAG?",
-          })
-        }
+            content: "Run an accessibility test",
+          });
+        }}
       >
-        What is WCAG?
+        {/* 6.82 px to make both rows the same width */}
+        Run an accessibility test<span className="w-[6.82px]"></span>⚡
       </Button>
-      <Button variant="outline" onClick={generateReport}>
-        <ActivitySquare className="mr-2 h-4 w-4" />
-        Generate an accessibility report
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => {
+          append({
+            id: nanoid(),
+            role: "user",
+            content: "What is WebAccessible.ai?",
+          });
+        }}
+      >
+        What is WebAccessible<span className="italic">.ai</span>?
+      </Button>
+      <Button
+        size="sm"
+        variant="outline"
+        onClick={() => {
+          append({
+            id: nanoid(),
+            role: "user",
+            content: "How can I support?",
+          });
+        }}
+      >
+        How can I support?
       </Button>
     </div>
   );
