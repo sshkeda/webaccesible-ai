@@ -1,4 +1,4 @@
-# waccessible.ai
+# webaccessible.ai
 
 [Video demo](https://youtu.be/FqWkPSTvH9s)
 
